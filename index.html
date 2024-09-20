@@ -2,11 +2,51 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=, initial-scale=1.0">
-    <title>Document</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration_Page</title>
+    <style>
+        body{
+            text-align: center;
+        }
+        .inp{
+            width: 270px;
+            height: 27px;
+        }
+    
+        input:focus{
+            outline-color: aquamarine;
+        }
+        button{
+            width: 290px;
+            height: 34px;
+            color: white;
+            background-color: blue;
+            font-size: larger;
+            font-weight: 500;
+            border-radius: 15px;
+        }
+        a{
+            text-decoration: none;
+            color: white;
+            background-color: blue;
+    
+        }
+    </style>
 </head>
 <body>
-    <h2>Edit Your Personal Information Here</h2>
-    
+    <form id="myform" onsubmit="submitform(event)"></form>
+    <h1>Student Registration</h1><br><br>
+    <input class="inp" type="text" placeholder="First Name" id="fname"><br><br>
+    <input class="inp" type="text" placeholder="Last Name" id="lname"><br><br>
+    <input class="inp" type="text" placeholder="CNIC" id="cnic"><br><br>
+    <input class="inp" type="text" placeholder="Password" id="password"><br><br>
+    <input class="inp" type="text" placeholder="Email" id="email"><br><br>
+    <br><br>
+<button id="btn" onclick="SignUp()">Register</button><br><br>
+<button><a href="/loginPortal/index1.html">Login Here</a></button><br><br>
+<button id="btn1"><a href="/dashboard/dashboard.html">Check Student List</a></button>
+
+</form>
+<script type="module" src="app.js"></script>
 </body>
 </html>

@@ -1,7 +1,8 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-analytics.js";
-import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
+import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js"; // Fixed import
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -18,42 +19,47 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth();
+const db = getFirestore(); 
 
-// Prevent form auto-refresh
-function submitform(event) {
-    event.preventDefault();
-    signIn();
-}
-
-
-
-window.signIn = () => {
-    // Getting input element
+// Getting input elements
+var firstName = document.getElementById('fname');
+var lastName = document.getElementById('lname');
+var cnic = document.getElementById('cnic');
 var emailInput = document.getElementById('email');
 var passwordInput = document.getElementById('password');
 
+window.SignUp = () => {
     let obj = {
+        fname: firstName.value,
+        lname: lastName.value,
+        cnic: cnic.value,
         email: emailInput.value,
         password: passwordInput.value,
-
     };
     
-    // Log the object
-    console.log(obj);
     
-    signInWithEmailAndPassword(auth, obj.email, obj.password)
-    .then((userCredential) => {
-        // Signed in
-        const user = userCredential.user;
-        console.log('User signed in:', user);
+    createUserWithEmailAndPassword(auth, obj.email, obj.password)
+        .then(async (userCredential) => {
+            // Signed in
+            const user = userCredential.user;
+            console.log('User signed up:', user);
+            let id = user.uid; // User ID
 
-        // Redirect to another page after successful login
-        window.location.href = '/dashboard/dashboard.html'; // Change this to your desired URL
-        
-    })
-    .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.error('Error signing in:', errorCode, errorMessage);
-    });
+            // Create a reference to the "User" collection
+            const ref = collection(db, "User");
+            
+            // Add the user object to Firestore
+            await addDoc(ref, { ...obj, uid: id }) // Ensure to include uid
+                .then(() => {
+                    console.log("User data added to Firestore");
+                })
+                .catch((error) => {
+                    console.error("Error adding document: ", error);
+                });
+        })
+        .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.error('Error signing up:', errorCode, errorMessage);
+        });
 }
